@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import indexRouter from './routers/indexRouter';
-import userRouter from './routers/userRouter';
+import userRouter from './routers/usersRouter';
 
 export default (app: express.Application) => {
     app.use(bodyParser.json());

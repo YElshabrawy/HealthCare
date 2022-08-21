@@ -1,6 +1,11 @@
 import express, { Request, Response } from 'express';
 import { UserModel, User } from '../models/users';
 
+import bcrypt from 'bcrypt';
+
+const pepper: string = String(process.env.BCRYPT_PW);
+const saltRounds = parseInt(String(process.env.BCRYPT_ROUNDS));
+
 const usersRouter = express.Router();
 
 const userModel = new UserModel();
@@ -55,7 +60,16 @@ usersRouter.put('/:id', async (req, res) => {
         let newUser = { ...oldUser };
         Object.keys(oldUser).forEach((key) => {
             if (req.body[key] && key !== 'id') {
-                newUser = { ...newUser, [key]: req.body[key] };
+                if (key === 'password') {
+                    console.log('password has changed');
+                    const hashedPassword = bcrypt.hashSync(
+                        req.body[key] + pepper,
+                        saltRounds
+                    );
+                    newUser = { ...newUser, [key]: hashedPassword };
+                } else {
+                    newUser = { ...newUser, [key]: req.body[key] };
+                }
             }
         });
         const result = await userModel.modify(newUser);

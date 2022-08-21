@@ -67,7 +67,6 @@ export class UserModel {
 
     async modify(u: User) {
         try {
-            console.log(u.firstname);
             const conn = await client.connect();
             const sql =
                 'UPDATE users SET firstname=$1, lastname = $2, username = $3, email = $4, password = $5, usertype = $6 WHERE id = $7 RETURNING *';

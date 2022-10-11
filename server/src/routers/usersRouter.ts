@@ -3,6 +3,8 @@ import { UserModel, User } from '../models/users';
 
 import bcrypt from 'bcrypt';
 
+import verifyAuthToken from '../utils/verifyAuthToken';
+
 const pepper: string = String(process.env.BCRYPT_PW);
 const saltRounds = parseInt(String(process.env.BCRYPT_ROUNDS));
 
@@ -10,7 +12,7 @@ const usersRouter = express.Router();
 
 const userModel = new UserModel();
 
-usersRouter.get('/', async (req: Request, res: Response) => {
+usersRouter.get('/', verifyAuthToken, async (req: Request, res: Response) => {
     try {
         const result = await userModel.index();
         res.status(200).json(result);
@@ -34,6 +36,7 @@ usersRouter.get('/:id', async (req: Request, res: Response) => {
     }
 });
 
+// Not needed
 usersRouter.post('/', async (req, res) => {
     try {
         //@ts-ignore

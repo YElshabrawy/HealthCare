@@ -39,6 +39,20 @@ export class UserModel {
         }
     }
 
+    async findEmail(email: string) {
+        try {
+            const conn = await client.connect();
+            const sql = `select * from users WHERE email = $1;`;
+            const result = await conn.query(sql, [email]);
+            conn.release();
+            return result.rows;
+        } catch (err) {
+            throw new Error(
+                `Could not find user with email "${email}". Error: ${err}`
+            );
+        }
+    }
+
     async create(u: User) {
         try {
             const conn = await client.connect();

@@ -15,7 +15,7 @@ const verifyAuthToken = (
         next();
     } catch (err) {
         //@ts-ignore
-        res.status(500).json(`Invalid Token: ${err.message}`);
+        res.status(403).json(`Invalid Token: ${err.message}`);
         return;
     }
 };

@@ -5,7 +5,7 @@ const generateToken = ({ username, id, email, usertype }: User) => {
     const data = { username, id, email, usertype };
     // @ts-ignore
     const accessToken = jwt.sign(data, process.env.JWT_ACCESS_KEY, {
-        expiresIn: '15m',
+        expiresIn: '10s',
     });
     // @ts-ignore
     const refreshToken = jwt.sign(data, process.env.JWT_REFRESH_KEY, {

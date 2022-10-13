@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import corsOptions from './config/cors/corsOptions';
 import cookieParser from 'cookie-parser';
 
 import indexRouter from './routers/indexRouter';
@@ -9,7 +10,7 @@ import authRouter from './routers/authRouter';
 
 export default (app: express.Application) => {
     app.use(bodyParser.json());
-    app.use(cors());
+    app.use(cors(corsOptions));
     app.use(cookieParser());
 
     app.use('/', indexRouter);

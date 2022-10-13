@@ -47,7 +47,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
         // check if email exists
         const result = await userModel.findEmail(email);
         if (result.length === 0)
-            return res.status(401).json({ message: 'Invalid email' });
+            return res.status(400).json({ message: 'Invalid email' });
 
         // compare password
         const validPassword = bcrypt.compareSync(
@@ -55,12 +55,18 @@ authRouter.post('/login', async (req: Request, res: Response) => {
             result[0].password
         );
         if (!validPassword)
-            return res.status(401).json({ message: 'Invalid password' });
+            return res.status(400).json({ message: 'Invalid password' });
 
         // JWT
         const tokens = generateToken(result[0]);
         res.cookie('_refresh_token', tokens.refreshToken, { httpOnly: true });
-        res.json(tokens);
+        res.json({
+            ...tokens,
+            id: result[0].id,
+            username: result[0].username,
+            email: result[0].email,
+            usertype: result[0].usertype,
+        });
         //@ts-ignore
     } catch (err: Error) {
         res.status(400).json(err.message);

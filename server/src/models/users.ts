@@ -11,7 +11,7 @@ export type User = {
     username: String;
     email: String;
     password: String;
-    usertype: Number; // 1 for admin, 2 for profiles
+    usertype: Number; // 1 for admin, 2 for doctors, 3 for patients
 };
 
 export class UserModel {

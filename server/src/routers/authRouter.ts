@@ -86,7 +86,13 @@ authRouter.get('/refresh_token', async (req: Request, res: Response) => {
             res.cookie('_refresh_token', tokens.refreshToken, {
                 httpOnly: true,
             });
-            res.json(tokens);
+            res.json({
+                // @ts-ignore
+                username: user?.username,
+                // @ts-ignore
+                usertype: user?.usertype,
+                ...tokens,
+            });
         });
 
         //@ts-ignore

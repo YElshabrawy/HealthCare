@@ -11,6 +11,7 @@ import Admin from './components/Admin';
 import Lounge from './components/Lounge';
 import LinkPage from './components/LinkPage';
 import RequireAuth from './components/Private/RequireAuth';
+import PersistLogin from './components/PersistLogin';
 
 function App() {
     return (
@@ -22,11 +23,13 @@ function App() {
                 <Route path="unauthorized" element={<Unauthorized />} />
 
                 {/* Private Routes */}
-                <Route element={<RequireAuth />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="editor" element={<Editor />} />
-                    <Route path="users" element={<Users />} />
-                    <Route path="lounge" element={<Lounge />} />
+                <Route element={<PersistLogin />}>
+                    <Route element={<RequireAuth />}>
+                        <Route path="/" element={<Home />} />
+                        <Route path="editor" element={<Editor />} />
+                        <Route path="users" element={<Users />} />
+                        <Route path="lounge" element={<Lounge />} />
+                    </Route>
                 </Route>
 
                 {/* catch all */}

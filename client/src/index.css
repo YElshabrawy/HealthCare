@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .myGrad {
+        @apply linear-gradient(96.14deg, #3A8EF6 -10.84%, #6F3AFA 196.74%);
+    }
+
+    .btn-primary {
+        @apply py-2 px-8 text-base bg-gradient-to-r from-grad1 to-grad2 text-white font-bold rounded-lg whitespace-nowrap;
+    }
+    .btn-secondary {
+        @apply py-2 px-8 text-base bg-white text-primary font-bold rounded-lg hover:bg-gradient-to-r from-grad1 to-grad2 hover:text-white transition-colors duration-300 whitespace-nowrap;
+    }
+}
+
+.active {
+    @apply sm:text-gray-800 sm:underline;
+}

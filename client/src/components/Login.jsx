@@ -139,12 +139,12 @@ const Login = () => {
                             </div>
 
                             <div className="text-sm">
-                                <a
-                                    href="#"
+                                <Link
+                                    to="/register"
                                     className="font-medium text-indigo-600 hover:text-indigo-500"
                                 >
                                     Doesn't have account?
-                                </a>
+                                </Link>
                             </div>
                         </div>
 

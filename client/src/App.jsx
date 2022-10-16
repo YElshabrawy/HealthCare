@@ -12,12 +12,17 @@ import Lounge from './components/Lounge';
 import LinkPage from './components/LinkPage';
 import RequireAuth from './components/Private/RequireAuth';
 import PersistLogin from './components/PersistLogin';
+import HomeLayout from './components/HomeLayout';
 
 function App() {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
                 {/* public routes */}
+                <Route path="/" element={<HomeLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path="about" element={<Admin />} />
+                </Route>
                 <Route path="login" element={<Login />} />
                 <Route path="linkpage" element={<LinkPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
@@ -25,7 +30,6 @@ function App() {
                 {/* Private Routes */}
                 <Route element={<PersistLogin />}>
                     <Route element={<RequireAuth />}>
-                        <Route path="/" element={<Home />} />
                         <Route path="editor" element={<Editor />} />
                         <Route path="users" element={<Users />} />
                         <Route path="lounge" element={<Lounge />} />

@@ -52,6 +52,19 @@ export class UserModel {
             );
         }
     }
+    async findUsername(username: string) {
+        try {
+            const conn = await client.connect();
+            const sql = `select * from users WHERE username = $1;`;
+            const result = await conn.query(sql, [username]);
+            conn.release();
+            return result.rows;
+        } catch (err) {
+            throw new Error(
+                `Could not find user with username "${username}". Error: ${err}`
+            );
+        }
+    }
 
     async create(u: User) {
         try {

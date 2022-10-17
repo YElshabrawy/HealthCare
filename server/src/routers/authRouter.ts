@@ -25,17 +25,38 @@ authRouter.post('/register', async (req: Request, res: Response) => {
         };
 
         // 2. validate data (#LATER)
-        // 3. post hashed data in users table
+        // Checks
+        //check if username exsists
+        const check1 = await userModel.findUsername(req.body?.username);
+        if (check1.length !== 0)
+            return res
+                .status(400)
+                .json({ message: 'This username already exists' });
+
+        // check if email exists
+        const check2 = await userModel.findEmail(req.body?.email);
+        if (check2.length !== 0)
+            return res
+                .status(400)
+                .json({ message: 'This email already exists' });
+
+        // post data in users table
         const result = await userModel.create(u);
 
-        // 4. crate new token
-        //@ts-ignore
-        const token = jwt.sign({ user: u }, process.env.JWT_KEY);
-        res.status(200).json(result);
+        // // 4. crate new token
+        const tokens = generateToken(result);
+        res.cookie('_refresh_token', tokens.refreshToken, { httpOnly: true });
+        res.json({
+            id: result.id,
+            username: result.username,
+            email: result.email,
+            usertype: result.usertype,
+            ...tokens,
+        });
 
         //@ts-ignore
     } catch (err: Error) {
-        res.status(400).json(err.message);
+        res.status(400).json({ message: err.message });
     }
 });
 
@@ -61,15 +82,15 @@ authRouter.post('/login', async (req: Request, res: Response) => {
         const tokens = generateToken(result[0]);
         res.cookie('_refresh_token', tokens.refreshToken, { httpOnly: true });
         res.json({
-            ...tokens,
             id: result[0].id,
             username: result[0].username,
             email: result[0].email,
             usertype: result[0].usertype,
+            ...tokens,
         });
         //@ts-ignore
     } catch (err: Error) {
-        res.status(400).json(err.message);
+        res.status(400).json({ message: err.message });
     }
 });
 

@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import logoImg from '../../assets/svg/logo.svg';
+import useAuth from '../../hooks/useAuth';
+import useLogout from '../../hooks/useLogout';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { auth } = useAuth();
+    const logout = useLogout();
+
+    const isLoggedIn = auth?.accessToken ? true : false;
+
     const navData = [
         { name: 'Home', to: '/' },
         { name: 'About Us', to: '/about' },
@@ -30,7 +37,7 @@ const Navbar = () => {
                     <div className="flex items-center">
                         <img src={logoImg} className="w-12" alt="" />
                         <h3 className="font-bold text-2xl ml-3 bg-clip-text text-transparent bg-gradient-to-r from-grad1 to-grad2">
-                            HealthyMe
+                            HealthCare
                         </h3>
                     </div>
                     <div className="sm:hidden">
@@ -50,12 +57,21 @@ const Navbar = () => {
                     }
                 >
                     {navItems}
-                    <Link
-                        to="login"
-                        className="btn-secondary sm:btn-primary mb-4 sm:mb-0"
-                    >
-                        Log In
-                    </Link>
+                    {!isLoggedIn ? (
+                        <Link
+                            to="login"
+                            className="btn-secondary sm:btn-primary mb-4 sm:mb-0"
+                        >
+                            Log In
+                        </Link>
+                    ) : (
+                        <button
+                            className="btn-secondary sm:btn-secondary sm:border mb-4 sm:mb-0"
+                            onClick={logout}
+                        >
+                            Sign Out
+                        </button>
+                    )}
                 </div>
             </nav>
         </>

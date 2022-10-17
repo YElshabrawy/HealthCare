@@ -19,9 +19,11 @@ function App() {
         <Routes>
             <Route path="/" element={<Layout />}>
                 {/* public routes */}
-                <Route path="/" element={<HomeLayout />}>
-                    <Route index element={<Home />} />
-                    <Route path="about" element={<Admin />} />
+                <Route element={<PersistLogin />}>
+                    <Route path="/" element={<HomeLayout />}>
+                        <Route index element={<Home />} />
+                        <Route path="about" element={<Admin />} />
+                    </Route>
                 </Route>
                 <Route path="login" element={<Login />} />
                 <Route path="linkpage" element={<LinkPage />} />

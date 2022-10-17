@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 
 import axios from '../../api/axios';
+import GoBackBtn from '../Tailwind/GoBackBtn';
 const LOGIN_URL = '/auth/login';
 
 const Login = () => {
@@ -174,7 +175,7 @@ const Login = () => {
                     </form>
                 </div>
             </div>
-
+            <GoBackBtn />
             {/* <section>
                 <p
                     ref={errRef}

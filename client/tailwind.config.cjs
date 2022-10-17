@@ -8,11 +8,15 @@ module.exports = {
                 grad1: '#3A8EF6',
                 grad2: '#6F3AFA',
                 transparent: 'transparent',
+                current: 'currentColor',
             },
             screens: {
                 sm: '695px',
             },
         },
+    },
+    variants: {
+        fill: ['hover', 'focus'], // this line does the trick
     },
     plugins: [],
 };

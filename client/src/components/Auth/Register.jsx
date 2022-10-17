@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 
 import axios from '../../api/axios';
+import GoBackBtn from '../Tailwind/GoBackBtn';
 const REGISTER_URL = '/auth/register';
 
 const Register = () => {
@@ -10,7 +11,7 @@ const Register = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || '/'; // To be able to visit the wanted location before auth
+    // const from = location.state?.from?.pathname || '/'; // To be able to visit the wanted location before auth
 
     // Focus purpose
     const fNameRef = useRef();
@@ -80,36 +81,6 @@ const Register = () => {
             }
             errRef.current.focus();
         }
-
-        // try {
-        //     const response = await axios.post(
-        //         LOGIN_URL,
-        //         JSON.stringify({ email, password }),
-        //         {
-        //             headers: { 'Content-Type': 'application/json' },
-        //             withCredentials: true,
-        //         }
-        //     );
-        //     const accessToken = response?.data?.accessToken;
-        //     const usertype = response?.data?.usertype;
-        //     const username = response?.data?.username;
-        //     const id = response?.data?.id;
-        //     setAuth({ email, password, usertype, username, id, accessToken });
-        //     setEmail('');
-        //     setPassword('');
-        //     navigate(from, { replace: true });
-        // } catch (err) {
-        //     if (!err?.response) {
-        //         setErrMsg('No Server Response');
-        //     } else if (err.response?.status === 400) {
-        //         setErrMsg(err.response?.data?.message);
-        //     } else if (err.response?.status === 401) {
-        //         setErrMsg('Unauthorized');
-        //     } else {
-        //         setErrMsg('Login Failed');
-        //     }
-        //     errRef.current.focus();
-        // }
     };
 
     return (
@@ -208,7 +179,6 @@ const Register = () => {
                                 <input
                                     type="email"
                                     id="email"
-                                    ref={fNameRef}
                                     onChange={(e) => setEmail(e.target.value)}
                                     value={email}
                                     required
@@ -355,45 +325,7 @@ const Register = () => {
                     </form>
                 </div>
             </div>
-
-            {/* <section>
-                <p
-                    ref={errRef}
-                    className={errMsg ? 'errmsg' : 'offscreen'}
-                    aria-live="assertive"
-                >
-                    {errMsg}
-                </p>
-                <h1>Log In</h1>
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        ref={emailRef}
-                        onChange={(e) => setEmail(e.target.value)}
-                        value={email}
-                        required
-                    />
-
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password}
-                        required
-                    />
-                    <button>Sign In</button>
-                </form>
-                <p>
-                    Need an Account?
-                    <br />
-                    <span className="line">
-                        <Link to="/register">Sign Up</Link>
-                    </span>
-                </p>
-            </section> */}
+            <GoBackBtn />
         </>
     );
 };

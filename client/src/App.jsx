@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 
 import Layout from './components/Layout';
-import Users from './components/Users';
+import DashLayout from './components/Dash/DashLayout';
+import Users from './components/Dash/Users';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Unauthorized from './components/Unauthorized';
@@ -14,8 +15,11 @@ import LinkPage from './components/LinkPage';
 import RequireAuth from './components/Private/RequireAuth';
 import PersistLogin from './components/PersistLogin';
 import HomeLayout from './components/HomeLayout';
+import useAuth from './hooks/useAuth';
 
 function App() {
+    const { auth } = useAuth();
+    console.log(auth);
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
@@ -25,20 +29,18 @@ function App() {
                 <Route path="unauthorized" element={<Unauthorized />} />
                 <Route path="register" element={<Register />} />
 
-                {/* Persitent No auth */}
-                <Route element={<PersistLogin />}>
-                    <Route path="/" element={<HomeLayout />}>
-                        <Route index element={<Home />} />
-                        <Route path="about" element={<Admin />} />
-                    </Route>
+                {/* Welcome route */}
+                <Route path="/" element={<HomeLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path="about" element={<Admin />} />
                 </Route>
 
                 {/* Private Routes */}
                 <Route element={<PersistLogin />}>
                     <Route element={<RequireAuth />}>
-                        <Route path="editor" element={<Editor />} />
-                        <Route path="users" element={<Users />} />
-                        <Route path="lounge" element={<Lounge />} />
+                        <Route path="dash" element={<DashLayout />}>
+                            <Route path="users" element={<Users />} />
+                        </Route>
                     </Route>
                 </Route>
 

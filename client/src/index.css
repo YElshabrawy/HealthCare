@@ -17,6 +17,12 @@
         filter: invert(12%) sepia(94%) saturate(3311%) hue-rotate(242deg)
             brightness(74%) contrast(84%);
     }
+    .dash-primary-btn {
+        @apply flex items-center border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 border-blue-500 text-blue-500 hover:text-white hover:bg-blue-600 focus:ring-blue-800;
+    }
+    .dash-secondary-btn {
+        @apply flex items-center border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 border-red-500 text-red-500 hover:text-white hover:bg-red-600 focus:ring-red-900;
+    }
 }
 
 .active {

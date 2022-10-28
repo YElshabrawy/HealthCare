@@ -12,7 +12,7 @@ const useRefreshToken = () => {
             return {
                 ...prev,
                 username: response.data.username,
-                userType: response.data.usertype,
+                usertype: response.data.usertype,
                 accessToken: response.data.accessToken,
             };
         });

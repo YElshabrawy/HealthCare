@@ -14,6 +14,15 @@ export type User = {
     usertype: Number; // 1 for admin, 2 for doctors, 3 for patients
 };
 
+export interface MyUser {
+    firstname: string;
+    lastname: string;
+    username: string;
+    email: string;
+    password: string;
+    usertype: number;
+}
+
 export class UserModel {
     async index() {
         try {

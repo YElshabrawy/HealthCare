@@ -1,9 +1,12 @@
 import express, { Request, Response } from 'express';
 import { UserModel, User } from '../models/users';
-
 import bcrypt from 'bcrypt';
 
 import verifyAuthToken from '../utils/verifyAuthToken';
+
+// Validation
+import validateData from '../middleware/validateData';
+import signupValidator from '../utils/validators/signupValidator';
 
 const pepper: string = String(process.env.BCRYPT_PW);
 const saltRounds = parseInt(String(process.env.BCRYPT_ROUNDS));
@@ -12,7 +15,7 @@ const usersRouter = express.Router();
 
 const userModel = new UserModel();
 
-usersRouter.get('/', verifyAuthToken, async (req: Request, res: Response) => {
+usersRouter.get('/', async (req: Request, res: Response) => {
     try {
         const result = await userModel.index();
         res.status(200).json(result);
@@ -22,22 +25,26 @@ usersRouter.get('/', verifyAuthToken, async (req: Request, res: Response) => {
     }
 });
 
-usersRouter.get('/:id', async (req: Request, res: Response) => {
-    try {
-        const id = parseInt(req.params.id);
-        const result = await userModel.show(id);
-        if (!result) {
-            throw new Error(`Could not find user ${id}`);
+usersRouter.get(
+    '/:id',
+    verifyAuthToken,
+    async (req: Request, res: Response) => {
+        try {
+            const id = parseInt(req.params.id);
+            const result = await userModel.show(id);
+            if (!result) {
+                throw new Error(`Could not find user ${id}`);
+            }
+            res.status(200).json(result);
+            //@ts-ignore
+        } catch (err: Error) {
+            res.status(404).json(err.message);
         }
-        res.status(200).json(result);
-        //@ts-ignore
-    } catch (err: Error) {
-        res.status(404).json(err.message);
     }
-});
+);
 
 // Not needed
-usersRouter.post('/', async (req, res) => {
+usersRouter.post('/', validateData(signupValidator), async (req, res) => {
     try {
         //@ts-ignore
         const u: User = {

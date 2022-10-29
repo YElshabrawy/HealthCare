@@ -7,58 +7,68 @@ const pepper: string = String(process.env.BCRYPT_PW);
 // import verifyAuthToken from '../utils/verifyAuthToken';
 import jwt from 'jsonwebtoken';
 
+// Validation
+import validateData from '../middleware/validateData';
+import signupValidator from '../utils/validators/signupValidator';
+
 const authRouter = express.Router();
 
 const userModel = new UserModel();
 
-authRouter.post('/register', async (req: Request, res: Response) => {
-    try {
-        // 1. collect data from body
-        //@ts-ignore
-        const u: User = {
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-            usertype: req.body.usertype,
-        };
+authRouter.post(
+    '/register',
+    validateData(signupValidator),
+    async (req: Request, res: Response) => {
+        try {
+            // 1. collect data from body
+            //@ts-ignore
+            const u: User = {
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                username: req.body.username,
+                email: req.body.email,
+                password: req.body.password,
+                usertype: req.body.usertype,
+            };
 
-        // 2. validate data (#LATER)
-        // Checks
-        //check if username exsists
-        const check1 = await userModel.findUsername(req.body?.username);
-        if (check1.length !== 0)
-            return res
-                .status(400)
-                .json({ message: 'This username already exists' });
+            // 2. validate data (#LATER)
+            // Checks
+            //check if username exsists
+            const check1 = await userModel.findUsername(req.body?.username);
+            if (check1.length !== 0)
+                return res
+                    .status(400)
+                    .json({ message: 'This username already exists' });
 
-        // check if email exists
-        const check2 = await userModel.findEmail(req.body?.email);
-        if (check2.length !== 0)
-            return res
-                .status(400)
-                .json({ message: 'This email already exists' });
+            // check if email exists
+            const check2 = await userModel.findEmail(req.body?.email);
+            if (check2.length !== 0)
+                return res
+                    .status(400)
+                    .json({ message: 'This email already exists' });
 
-        // post data in users table
-        const result = await userModel.create(u);
+            // post data in users table
+            const result = await userModel.create(u);
 
-        // // 4. crate new token
-        const tokens = generateToken(result);
-        res.cookie('_refresh_token', tokens.refreshToken, { httpOnly: true });
-        res.json({
-            id: result.id,
-            username: result.username,
-            email: result.email,
-            usertype: result.usertype,
-            ...tokens,
-        });
+            // // 4. crate new token
+            const tokens = generateToken(result);
+            res.cookie('_refresh_token', tokens.refreshToken, {
+                httpOnly: true,
+            });
+            res.json({
+                id: result.id,
+                username: result.username,
+                email: result.email,
+                usertype: result.usertype,
+                ...tokens,
+            });
 
-        //@ts-ignore
-    } catch (err: Error) {
-        res.status(400).json({ message: err.message });
+            //@ts-ignore
+        } catch (err: Error) {
+            res.status(400).json({ message: err.message });
+        }
     }
-});
+);
 
 authRouter.post('/login', async (req: Request, res: Response) => {
     try {

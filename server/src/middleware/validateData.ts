@@ -6,7 +6,6 @@ function validateData(ajvValidate: ValidateFunction) {
         const valid = ajvValidate(req.body);
         if (!valid) {
             const errors = ajvValidate.errors;
-            console.log(errors);
             const errorMessages: Array<string | undefined> = [];
             errors?.forEach((err) => {
                 if (err.keyword === 'format') {
@@ -47,7 +46,7 @@ function validateData(ajvValidate: ValidateFunction) {
                 }
             });
 
-            return res.status(400).json(errorMessages);
+            return res.status(400).json({ message: errorMessages });
         }
         next();
     };

@@ -3,6 +3,5 @@
 3 => Patient
 
 Tasks:
-- JOI Validation [Server]
 - Use React Query and axios to fetch users [Client]
 - Edit and delete users using React Query [Client]

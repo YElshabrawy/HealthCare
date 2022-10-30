@@ -73,7 +73,16 @@ const Register = () => {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response?.status === 400) {
-                setErrMsg(err.response?.data?.message);
+                if (Array.isArray(err.response?.data?.message)) {
+                    const arr = err.response?.data?.message;
+                    let newMsg = '';
+                    arr.forEach((msg) => {
+                        newMsg += `-${msg}\n`;
+                    });
+                    setErrMsg(newMsg);
+                } else {
+                    setErrMsg(err.response?.data?.message);
+                }
             } else if (err.response?.status === 401) {
                 setErrMsg('Unauthorized');
             } else {
@@ -97,7 +106,9 @@ const Register = () => {
                             }`}
                             aria-live="assertive"
                         >
-                            {errMsg}
+                            {errMsg.split('\n').map((i) => {
+                                return <p>{i}</p>;
+                            })}
                         </p>
                         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
                             Register

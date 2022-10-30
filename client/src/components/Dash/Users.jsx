@@ -1,44 +1,101 @@
 import { useState, useEffect } from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import UserListItem from './UserListItem';
 import BreadCrumb from '../Tailwind/BreadCrumb';
+import LoadingSpinner from '../Tailwind/LoadingSpinner';
 
 const Users = () => {
-    const [users, setUsers] = useState();
+    // // Before RQ
+    // const [users, setUsers] = useState();
+    // const axiosPrivate = useAxiosPrivate();
+
+    // useEffect(() => {
+    //     let isMounted = true;
+    //     const controller = new AbortController();
+
+    //     const getUsers = async () => {
+    //         try {
+    //             const response = await axiosPrivate.get('/users', {
+    //                 signal: controller.signal,
+    //             });
+    //             // console.log(response.data);
+
+    //             isMounted && setUsers(response.data);
+    //         } catch (e) {
+    //             if (e.message === 'canceled') return;
+    //             console.log(e.message);
+    //         }
+    //     };
+
+    //     getUsers();
+
+    //     // cleanup function
+    //     return () => {
+    //         isMounted = false;
+    //         controller.abort();
+    //     };
+    // }, []);
+
+    // RQ
     const axiosPrivate = useAxiosPrivate();
+    const controller = new AbortController();
+    const fetchUsers = () => {
+        return axiosPrivate.get('/users', {
+            signal: controller.signal,
+        });
+    };
 
-    useEffect(() => {
-        let isMounted = true;
-        const controller = new AbortController();
+    const { isLoading, isError, data, error } = useQuery(
+        'get-users',
+        fetchUsers
+    );
 
-        const getUsers = async () => {
-            try {
-                const response = await axiosPrivate.get('/users', {
-                    signal: controller.signal,
-                });
-                // console.log(response.data);
+    if (isLoading) {
+        return (
+            <div className="w-[80%] mx-auto p-6">
+                <LoadingSpinner />
+            </div>
+        );
+    }
 
-                isMounted && setUsers(response.data);
-            } catch (e) {
-                if (e.message === 'canceled') return;
-                console.log(e.message);
-            }
-        };
-
-        getUsers();
-
-        // cleanup function
-        return () => {
-            isMounted = false;
-            controller.abort();
-        };
-    }, []);
+    if (isError) {
+        return (
+            <div className="w-[80%] mx-auto p-6">
+                <div
+                    className="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 h-fit"
+                    role="alert"
+                >
+                    <svg
+                        aria-hidden="true"
+                        className="flex-shrink-0 inline w-5 h-5 mr-3"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                            clip-rule="evenodd"
+                        ></path>
+                    </svg>
+                    <span className="sr-only">Info</span>
+                    <div>
+                        <span className="font-medium">Error!</span>{' '}
+                        {error.message}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-[80%] mx-auto p-6">
+            {/* BreadCrumb */}
             <BreadCrumb items={['Dashboard', 'Users']} />
 
+            {/* Searchbar */}
             <div className="w-[40%] my-3">
                 <label
                     htmlFor="default-search"
@@ -80,9 +137,9 @@ const Users = () => {
                 </div>
             </div>
 
-            {users?.length ? (
+            {data?.data?.length ? (
                 <ul>
-                    {users.map((user, i) => (
+                    {data?.data.map((user, i) => (
                         <UserListItem key={i} user={user} />
                     ))}
                 </ul>

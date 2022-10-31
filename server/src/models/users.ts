@@ -27,7 +27,7 @@ export class UserModel {
     async index() {
         try {
             const conn = await client.connect();
-            const sql = 'select * from users;';
+            const sql = 'select * from users ORDER BY id ASC;';
             const result = await conn.query(sql);
             conn.release();
             return result.rows;

@@ -44,7 +44,7 @@ usersRouter.get(
 );
 
 // Not needed
-usersRouter.post('/', validateData(signupValidator), async (req, res) => {
+usersRouter.post('/', async (req, res) => {
     try {
         //@ts-ignore
         const u: User = {

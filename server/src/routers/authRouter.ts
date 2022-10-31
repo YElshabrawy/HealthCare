@@ -119,9 +119,7 @@ authRouter.get('/refresh_token', async (req: Request, res: Response) => {
             });
             res.json({
                 // @ts-ignore
-                username: user?.username,
-                // @ts-ignore
-                usertype: user?.usertype,
+                user,
                 ...tokens,
             });
         });

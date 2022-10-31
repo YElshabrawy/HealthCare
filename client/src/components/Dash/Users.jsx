@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import UserListItem from './UserListItem';
 import BreadCrumb from '../Tailwind/BreadCrumb';
 import LoadingSpinner from '../Tailwind/LoadingSpinner';
+import useAuth from '../../hooks/useAuth';
 
 const Users = () => {
-    // // Before RQ
+    /* // Before RQ
     // const [users, setUsers] = useState();
     // const axiosPrivate = useAxiosPrivate();
 
@@ -36,8 +35,10 @@ const Users = () => {
     //         isMounted = false;
     //         controller.abort();
     //     };
-    // }, []);
+    // }, []); */
 
+    const { auth } = useAuth();
+    const USER_ID = auth?.user?.id;
     // RQ
     const axiosPrivate = useAxiosPrivate();
     const controller = new AbortController();
@@ -139,9 +140,11 @@ const Users = () => {
 
             {data?.data?.length ? (
                 <ul>
-                    {data?.data.map((user, i) => (
-                        <UserListItem key={i} user={user} />
-                    ))}
+                    {data?.data.map((user, i) => {
+                        if (user.id !== USER_ID) {
+                            return <UserListItem key={i} user={user} />;
+                        }
+                    })}
                 </ul>
             ) : (
                 <p>No users found</p>

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import axios from '../../api/axios';
 import AdminAvatar from '../../assets/avatars/Admin.png';
 import DoctorAvatar from '../../assets/avatars/Doctor.png';
 import PatientAvatar from '../../assets/avatars/Patient.png';
+import UserEditModal from './UserEditModal';
 
 const USER_ENUM = {
     1: 'Admin',
@@ -16,6 +19,32 @@ const AVATAR_ENUM = {
 };
 
 const UserListItem = ({ user }) => {
+    const [editIsVisible, setEditIsVisible] = useState(false);
+    const [errorIsVisible, setErrortIsVisible] = useState(false);
+
+    const queryClient = useQueryClient();
+    const { mutate: deleteUser } = useMutation(
+        (id) => {
+            return axios.delete(`/users/${id}`);
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('get-users');
+            },
+        }
+    );
+
+    const handleOnClose = () => setEditIsVisible(false);
+
+    const handleDelete = () => {
+        const isSure = confirm(
+            `Are you sure you want to delete:\n${user.firstname} ${user.lastname} (${user.username})`
+        );
+        if (isSure) {
+            deleteUser(user.id);
+        }
+    };
+
     return (
         <article className="flex items-center justify-between space-x-6 mb-3 p-6 rounded-lg shadow-md bg-slate-50 ">
             <div className="flex items-start">
@@ -52,11 +81,33 @@ const UserListItem = ({ user }) => {
                                 {USER_ENUM[user.usertype]}
                             </dd>
                         </div>
+                        <div>
+                            <dt className="sr-only">Email</dt>
+                            <dd className="flex items-center font-light">
+                                <svg
+                                    width="2"
+                                    height="2"
+                                    fill="currentColor"
+                                    className="mx-2 text-slate-300"
+                                    aria-hidden="true"
+                                >
+                                    <circle cx="1" cy="1" r="1" />
+                                </svg>
+                                {user.email}
+                            </dd>
+                        </div>
                     </dl>
                 </div>
             </div>
             <div className="flex">
-                <button type="button" className="dash-primary-btn">
+                <button
+                    type="button"
+                    className="dash-primary-btn"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setEditIsVisible(true);
+                    }}
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="mr-2 -ml-1 w-4 h-4"
@@ -77,7 +128,16 @@ const UserListItem = ({ user }) => {
                     </svg>
                     Edit User
                 </button>
-                <button type="button" className="dash-secondary-btn">
+                <UserEditModal
+                    onClose={handleOnClose}
+                    visible={editIsVisible}
+                    userID={user.id}
+                />
+                <button
+                    type="button"
+                    onClick={handleDelete}
+                    className="dash-secondary-btn"
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="mr-2 -ml-1 w-4 h-4"

@@ -30,9 +30,11 @@ function App() {
                 <Route path="register" element={<Register />} />
 
                 {/* Welcome route */}
-                <Route path="/" element={<HomeLayout />}>
-                    <Route index element={<Home />} />
-                    <Route path="about" element={<Admin />} />
+                <Route element={<PersistLogin />}>
+                    <Route path="/" element={<HomeLayout />}>
+                        <Route index element={<Home />} />
+                        <Route path="about" element={<Admin />} />
+                    </Route>
                 </Route>
 
                 {/* Private Routes */}
